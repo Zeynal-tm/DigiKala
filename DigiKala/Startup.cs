@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DigiKala.DataAccessLayer;
 using DigiKala.DataAccessLayer.Context;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DigiKala
 {
@@ -26,6 +27,18 @@ namespace DigiKala
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.LoginPath = "";
+                options.LogoutPath = "";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+            });
+
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -40,6 +53,7 @@ namespace DigiKala
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseRouting();
             app.UseStaticFiles();
 
