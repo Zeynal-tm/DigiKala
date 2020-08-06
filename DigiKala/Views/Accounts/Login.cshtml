@@ -1,0 +1,28 @@
+﻿@model DigiKala.Core.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "ورود به دیجی کالا";
+    Layout = "~/Views/Shared/_Account.cshtml";
+}
+
+<h4 class="text-center">ورود به دیجی کالا</h4>
+<hr />
+<form asp-action="Login">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input asp-for="Mobile" class="form-control input-lg" placeholder="شماره موبایل" />
+        <span asp-validation-for="Mobile" class="text-danger validation-error"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="Password" class="form-control input-lg" placeholder="کلمه عبور" />
+        <span asp-validation-for="Password" class="text-danger validation-error"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="ورود به دیجی کالا" class="btn-lg btn-block btn-submit" />
+    </div>
+    <div class="form-group">
+        <h4 class="text-center">
+            <a href="/Accounts/Forget">فراموشی رمز عبور</a>
+        </h4>
+    </div>
+</form>

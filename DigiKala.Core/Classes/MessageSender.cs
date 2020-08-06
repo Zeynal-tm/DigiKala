@@ -12,7 +12,7 @@ namespace DigiKala.Core.Classes
             var sender = "10004346";
             var receptor = to;
             var message = body;
-            var api = new KavenegarApi("");
+            var api = new KavenegarApi("752F4D42483276764C67675977545032684C496B41384A78585A4350632B7963");
 
             api.Send(sender, receptor, message);
         }

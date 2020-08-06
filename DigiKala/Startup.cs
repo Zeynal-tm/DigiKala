@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using DigiKala.DataAccessLayer;
 using DigiKala.DataAccessLayer.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using DigiKala.Core.Interfaces;
+using DigiKala.Core.Services;
+using Microsoft.CodeAnalysis.Options;
 
 namespace DigiKala
 {
@@ -34,8 +37,8 @@ namespace DigiKala
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(options =>
             {
-                options.LoginPath = "";
-                options.LogoutPath = "";
+                options.LoginPath = "/Accounts/Login";
+                options.LogoutPath = "/Accounts/LogOut";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
             });
 
@@ -43,6 +46,10 @@ namespace DigiKala
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddTransient<IUser, UserService>();
+            services.AddTransient<IAccount, AccountService>();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +61,7 @@ namespace DigiKala
             }
 
             app.UseAuthentication();
+            app.UseMvcWithDefaultRoute();
             app.UseRouting();
             app.UseStaticFiles();
 

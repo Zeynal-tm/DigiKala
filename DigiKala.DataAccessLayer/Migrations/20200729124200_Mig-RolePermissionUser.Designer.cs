@@ -3,14 +3,16 @@ using DigiKala.DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DigiKala.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200729124200_Mig-RolePermissionUser")]
+    partial class MigRolePermissionUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,45 +76,6 @@ namespace DigiKala.DataAccessLayer.Migrations
                     b.ToTable("RolePermissions");
                 });
 
-            modelBuilder.Entity("DigiKala.DataAccessLayer.Entities.Store", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Desc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Logo")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Mail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<bool>("MailActivate")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MobileActivate")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Tel")
-                        .HasColumnType("nvarchar(40)")
-                        .HasMaxLength(40);
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Store");
-                });
-
             modelBuilder.Entity("DigiKala.DataAccessLayer.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -126,11 +89,6 @@ namespace DigiKala.DataAccessLayer.Migrations
                         .HasMaxLength(6);
 
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("Date")
-                        .IsRequired()
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
@@ -172,15 +130,6 @@ namespace DigiKala.DataAccessLayer.Migrations
                     b.HasOne("DigiKala.DataAccessLayer.Entities.Role", "Role")
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DigiKala.DataAccessLayer.Entities.Store", b =>
-                {
-                    b.HasOne("DigiKala.DataAccessLayer.Entities.User", "User")
-                        .WithOne("Store")
-                        .HasForeignKey("DigiKala.DataAccessLayer.Entities.Store", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

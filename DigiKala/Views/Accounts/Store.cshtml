@@ -1,0 +1,46 @@
+﻿@model DigiKala.Core.ViewModels.StoreRegisterViewModel
+
+@{
+    ViewData["Title"] = "ثبت درخواست فروشگاه";
+    Layout = "~/Views/Shared/_Account.cshtml";
+}
+
+<h4 class="text-center">ثبت درخواست فروشگاه</h4>
+<hr />
+<form asp-action="Store">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewBag.MyMessage)
+    {
+        <div class="form-group" style="margin-top:20px; margin-bottom:20px;">
+            <div class="alert alert-success text-center">
+                <h5 class="text-center">
+                    ثبت درخواست شما انجام شد، پس از تایید شماره موبایل و ایمیل امکان استفاده را خواهید داشت
+                </h5>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <input asp-for="Mobile" class="form-control input-lg" placeholder="شماره موبایل" />
+        <span asp-validation-for="Mobile" class="text-danger validation-error"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="Mail" class="form-control input-lg" placeholder="ایمیل" />
+        <span asp-validation-for="Mail" class="text-danger validation-error"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="Password" class="form-control input-lg" placeholder="کلمه عبور" />
+        <span asp-validation-for="Password" class="text-danger validation-error"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="ثبت درخواست" class="btn-lg btn-block btn-submit" />
+    </div>
+    @if (ViewBag.MyMessage)
+    {
+        <div class="form-group">
+            <h4 class="text-center">
+                <a href="/Accounts/Login">ورود به پنل فروشگاه</a>
+            </h4>
+        </div>
+    }
+</form>
+

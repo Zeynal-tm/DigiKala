@@ -1,0 +1,25 @@
+﻿@model DigiKala.Core.ViewModels.ActivateViewModel
+
+@{
+    ViewData["Title"] = "فعالسازی حساب";
+    Layout = "~/Views/Shared/_Account.cshtml";
+}
+
+<h4 class="text-center">فعالسازی حساب در دیجی کالا</h4>
+<hr />
+<form asp-action="Activate">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input asp-for="ActiveCode" class="form-control input-lg" placeholder="کد فعالسازی" />
+        <span asp-validation-for="ActiveCode" class="text-danger validation-error"></span>
+    </div>
+   
+    <div class="form-group">
+        <input type="submit" value="فالسازی حساب" class="btn-lg btn-block btn-submit" />
+    </div>
+    @*<div class="form-group">
+        <h4 class="text-center">
+            <a href="/">قبلا ثبت نام کرده ام</a>
+        </h4>
+    </div>*@
+</form>
