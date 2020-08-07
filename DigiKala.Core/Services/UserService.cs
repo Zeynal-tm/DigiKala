@@ -7,6 +7,7 @@ using DigiKala.Core.Interfaces;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace DigiKala.Core.Services
 {
@@ -19,6 +20,29 @@ namespace DigiKala.Core.Services
             _context = context;
         }
 
+        public void ActiveMailAddress(string mailAddress)
+        {
+            Store store = _context.Store.FirstOrDefault(s => s.Mail == mailAddress);
+            store.MailActivate = true;
+            _context.SaveChanges();
+        }
+
+        public void ActiveMobileNumber(string mobileNumber)
+        {
+            Store store = _context.Store.Include(s=> s.User).FirstOrDefault(s => s.User.Mobile == mobileNumber);
+            store.MobileActivate = true;
+            _context.SaveChanges();
+        }
+
+        public bool ExistsMailActivate(string username, string code)
+        {
+            return _context.Store.Include(s => s.User).Any(s => s.User.Mobile == username && s.MailActivateCode == code);
+        }
+
+        public bool ExistsMobileActivate(string username, string code)
+        {
+            return _context.Users.Any(u => u.Mobile == username && u.ActiveCode == code);
+        }
 
         public bool ExistsPermission(int permissionId, int roleId)
         {
@@ -33,6 +57,11 @@ namespace DigiKala.Core.Services
         public string GetUserRoleName(string username)
         {
             return _context.Users.Include(u=> u.Role).FirstOrDefault(u => u.Mobile == username).Role.Name;
+        }
+
+        public Store GetUserStore(string username)
+        {
+            return _context.Store.Include(s => s.User).FirstOrDefault(s => s.User.Mobile == username); 
         }
     }
 }

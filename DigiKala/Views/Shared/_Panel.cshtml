@@ -1,8 +1,16 @@
 ﻿<!DOCTYPE html>
 
+@using DigiKala.Core.Classes
+
+@inject PanelLayoutScope scope
+
+@{
+    string roleName = scope.GetUserRoleName(User.Identity.Name);
+}
+
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-sçale=1"/>
+    <meta name="viewport" content="width=device-width, initial-sçale=1" />
     <title>@ViewBag.Title</title>
 
     <link href="~/css/bootstrap-rtl.min.css" rel="stylesheet" />
@@ -21,7 +29,7 @@
             <div class="sidebar-content">
                 <div class="sidebar-brand">
 
-                    <a href="#">پنل دیجی کالا</a>
+                    <a href="#">پنل @roleName دیجی کالا</a>
 
                     <div id="close-sidebar">
                         <i class="fa fa-times"></i>
@@ -32,10 +40,10 @@
 
                     <div class="user-info">
                         <span class="user-name">
-                            میلاد عامری
+
                         </span>
                         <span class="user-role">
-                            مدیر سیستم
+                            @roleName
                         </span>
                         <span class="user-status">
                             <i class="fa fa-circle"></i>
@@ -43,12 +51,52 @@
                         </span>
                     </div>
                     <div class="user-pic">
-                        <img src="~/images/site/dk.png" alt="دیجی کالا" width="80" height="80" class="img-responsive" />
+                        @if (roleName == "مدیر")
+                        {
+                            <img src="~/images/site/dk.png" alt="دیجی کالا" width="80" height="80" class="img-responsive" />
+                        }
+                        else
+                        {
+
+                        }
                     </div>
                 </div>
 
                 <div class="sidebar-menu">
                     <ul>
+                        @if (roleName == "مدیر")
+                        {
+
+                        }
+                        else
+                        {
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <span class="pull-right">تنظیمات</span>
+                                    <span class="pull-left fa fa-cogs"></span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                مشخصات فروشگاه
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/Panel/Activate">
+                                                فعالسازی حساب
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                بارگزاری مدارک
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+
                         <li class="sidebar-dropdown">
                             <a href="#">
                                 <span class="pull-right">تنظیمات</span>

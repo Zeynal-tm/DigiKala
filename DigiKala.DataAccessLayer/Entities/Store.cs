@@ -53,6 +53,12 @@ namespace DigiKala.DataAccessLayer.Entities
 
         public bool MailActivate { get; set; }
 
+        [Display(Name = "کد")]
+        [Required(ErrorMessage = "نباید بدون مقدار باشد")]
+        [MaxLength(6, ErrorMessage = "مقدار {0} نباید بیش تر از {1} کاراکتر باشد")]
+
+        public string MailActivateCode { get; set; }
+
         public virtual User User { get; set; }
     }
 }

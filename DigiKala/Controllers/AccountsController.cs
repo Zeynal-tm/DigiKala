@@ -23,12 +23,14 @@ namespace DigiKala.Controllers
     public class AccountsController : Controller
     {
         private IAccount _account;
+        private IViewRenderService _render;
 
         private PersianCalendar pc = new PersianCalendar();
 
-        public AccountsController(IAccount account)
+        public AccountsController(IAccount account, IViewRenderService render)
         {
             _account = account;
+            _render = render;
         }
 
         public IActionResult Register()
@@ -121,7 +123,7 @@ namespace DigiKala.Controllers
 
                 if (user != null)
                 {
-                    if (user.IsActive)
+                    if (user.Role.Name == "فروشگاه")
                     {
                         var claims = new List<Claim>()
                         {
@@ -139,20 +141,45 @@ namespace DigiKala.Controllers
 
                         HttpContext.SignInAsync(principal, properties);
 
-                        if (user.Role.Name == "کاربر")
-                        {
-                            return RedirectToAction("Dashboard", "Home");
-                        }
-                        else
-                        {
-                            return RedirectToAction("Dashboard", "Panel");
-                        }
+                        return RedirectToAction("Dashboard", "Panel");
                     }
                     else
                     {
-                        return RedirectToAction(nameof(Activate));
+                        if (user.IsActive)
+                        {
+                            var claims = new List<Claim>()
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                            new Claim(ClaimTypes.Name, user.Mobile)
+                        };
+
+                            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var principal = new ClaimsPrincipal(identity);
+
+                            var properties = new AuthenticationProperties()
+                            {
+                                IsPersistent = true
+                            };
+
+                            HttpContext.SignInAsync(principal, properties);
+
+                            if (user.Role.Name == "کاربر")
+                            {
+                                return RedirectToAction("Dashboard", "Home");
+                            }
+                            else
+                            {
+                                return RedirectToAction("Dashboard", "Panel");
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction(nameof(Activate));
+                        }
                     }
                 }
+
+                    
                 else
                 {
                     ModelState.AddModelError("Password", "مشخصات کاربری اشتباه است");
@@ -204,8 +231,8 @@ namespace DigiKala.Controllers
         {
             return View();
         }
-
-        [HttpPut]
+        
+        [HttpPost]
         public IActionResult Reset(ResetViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -242,6 +269,7 @@ namespace DigiKala.Controllers
                 else
                 {
                     int userId = 0;
+                    string mobileCode = "";
 
                     if (_account.ExistsMobileNumber(viewModel.Mobile))
                     {
@@ -251,9 +279,11 @@ namespace DigiKala.Controllers
                     }
                     else
                     {
+                        mobileCode = CodeGenerators.ActiveCode();
+
                         User user = new User
                         {
-                            ActiveCode = CodeGenerators.ActiveCode(),
+                            ActiveCode = mobileCode,
                             Code = null,
                             Fullname = null,
                             IsActive = false,
@@ -279,12 +309,29 @@ namespace DigiKala.Controllers
                         MobileActivate = false,
                         Tel = null,
                         UserId = userId,
-                        Name = null
+                        Name = null,
+                        MailActivateCode = CodeGenerators.ActiveCode()
                     };
 
                     _account.AddStrore(store);
 
                     ViewBag.MyMessage = true;
+
+                    MessageSender sender = new MessageSender();
+                    string messageBody = _render.RenderToStringAsync("_ActivateMail", store);
+
+                    try
+                    {
+                        sender.SMS(viewModel.Mobile, "درخواست ثبت فروشگاه انجام شد"
+                            + Environment.NewLine + "کد فعال سازی :" + mobileCode);
+
+                        MessageSender.Email(store.Mail, "فعالسازی فروشگاه", messageBody);
+                    }
+                    catch 
+                    {
+
+                        
+                    }
                 }
             }
 

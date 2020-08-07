@@ -17,6 +17,7 @@ namespace DigiKala.DataAccessLayer.Context
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Store> Store{ get; set; }
+        public DbSet<Store> Store { get; set; }
+        public DbSet<Setting> Settings { get; set; }
     }
 }

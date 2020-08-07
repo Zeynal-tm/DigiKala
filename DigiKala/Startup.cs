@@ -14,6 +14,7 @@ using DigiKala.DataAccessLayer.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DigiKala.Core.Interfaces;
 using DigiKala.Core.Services;
+using DigiKala.Core.Classes;
 using Microsoft.CodeAnalysis.Options;
 
 namespace DigiKala
@@ -49,6 +50,8 @@ namespace DigiKala
 
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAccount, AccountService>();
+            services.AddTransient<IViewRenderService, RenderToString>();
+            services.AddScoped<PanelLayoutScope>();
             services.AddMvc(option => option.EnableEndpointRouting = false);
         }
 
